@@ -1,0 +1,5 @@
+
+*.bak
+*.ini
+*.pyc
+config/conf.yaml
