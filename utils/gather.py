@@ -138,7 +138,7 @@ class Gather(Logs,Database,Multicall):
         sql=\
         '''
         SELECT
-            userAddress, sum(amount), tokenAddress
+            userAddress, sum(amount) as usdCompensation, tokenAddress
         
         FROM
         (
@@ -162,7 +162,11 @@ class Gather(Logs,Database,Multicall):
             userAddress, tokenAddress
         ;                    
         '''
-        return self.get_df_from_server(sql)
+        df = self.get_df_from_server(sql)
+        df = df[df.usdCompensation>0].copy()
+        df.to_csv("output.csv")
+        groupedDF = df[["userAddress","usdCompensation"]].groupby(by=['userAddress']).sum()
+        groupedDF.to_csv("output_grouped.csv")
 
             
             
